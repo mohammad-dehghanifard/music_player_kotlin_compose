@@ -18,104 +18,91 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.musicplayercompose.R
+import com.example.musicplayercompose.ui.theme.darkBlue
 import com.example.musicplayercompose.ui.theme.lightBlue
+import com.example.musicplayercompose.ui.theme.sliderActiveColor
 
 @Composable
 fun mainView(){
     Scaffold() {
-        Box(modifier = Modifier.fillMaxSize().background(color = lightBlue)) {
-            // cover
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp)
-                    .align(alignment = Alignment.Center)
-                    .padding(horizontal = 6.dp),
-                    backgroundColor = Color.White,
-                    shape = RoundedCornerShape(15)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 40.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    // poster image
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(color = lightBlue)) {
+
+           Column(modifier = Modifier.padding(16.dp)) {
+               // header text
+               Spacer(modifier = Modifier.height(8.dp))
+               Text(text = "Music Player App Demo", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White)
+               Text(text = "developer : mohammad dehghanifard", fontSize = 14.sp, fontWeight = FontWeight.Normal,color = Color.White)
+               Spacer(modifier = Modifier.height(32.dp))
+
+               // poster
+               Card(modifier = Modifier
+                   .fillMaxWidth()
+                   .height(360.dp)
+                   .align(alignment = Alignment.CenterHorizontally),
+                   shape = RoundedCornerShape(16.dp),
+               ) {
+                   Image(painterResource(id = R.drawable.poster), contentDescription = null, contentScale = ContentScale.Crop )
+
+               }
+                // information
+               Spacer(modifier = Modifier.height(12.dp))
+               Text(text = "Tobe Kardam", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White, modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
+               Text(text = "kasra zahedi", fontSize = 14.sp, fontWeight = FontWeight.Normal,color = Color.White,modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
+
+
+           }
+
+            // controller
+           Card(modifier = Modifier
+               .align(alignment = Alignment.BottomCenter)
+               .fillMaxWidth()
+               .height(250.dp),
+               shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+               backgroundColor = Color.White
+           ) {
+            Column(modifier = Modifier.padding(12.dp)) {
+                //slider
+                Slider(
+                    colors = SliderDefaults.colors(
+                        thumbColor = darkBlue,
+                        activeTrackColor = sliderActiveColor
+                    ),
+                    value = 0.5f,
+                    onValueChange = {}
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+                
+                Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
+
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = null)
+                    }
+                    Spacer(modifier = Modifier.width(68.dp))
+
+                    //play icon
                     Card(
                         modifier = Modifier
-                            .width(160.dp)
-                            .height(160.dp),
-                        shape = RoundedCornerShape(12),
+                            .width(50.dp)
+                            .height(50.dp),
+                        shape = RoundedCornerShape(64),
+                        backgroundColor = darkBlue
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.poster),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    // information
-                    Text(text = "Tobe Kardam", fontSize = 24.sp, fontWeight = FontWeight.Black)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Kasra Zahedi", fontSize = 12.sp, fontWeight = FontWeight.Normal)
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    //controller
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        IconButton(
-                            onClick = { /*TODO*/ }) {
-                            Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = null)
-                        }
-
-                        Card(
-                            modifier = Modifier
-                                .width(60.dp)
-                                .height(60.dp),
-                            shape = RoundedCornerShape(64),
-                            backgroundColor = Color.Red
-                        ) {
-                            IconButton(
-                                onClick = { /*TODO*/ }) {
-                                Icon(
-                                    Icons.Filled.PlayArrow,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                        }
-
-                        IconButton(
-                            onClick = { /*TODO*/ }) {
-                            Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null)
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White)
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
-                    //slider
-                    Slider(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        value = 0f,
-                        onValueChange = {},
-                        colors = SliderDefaults.colors(
-                            activeTickColor = Color.Red,
-                            disabledActiveTickColor = Color.Gray
-                        )
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                    ) {
-                        Text(text = "00 : 00", fontSize = 12.sp, fontWeight = FontWeight.Normal)
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(text = "02:56", fontSize = 12.sp, fontWeight = FontWeight.Normal)
+                    Spacer(modifier = Modifier.width(68.dp))
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null)
                     }
+
                 }
-
             }
+           }
         }
     }
 }
