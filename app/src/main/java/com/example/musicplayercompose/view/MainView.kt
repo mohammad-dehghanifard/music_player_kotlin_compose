@@ -1,4 +1,6 @@
 package com.example.musicplayercompose.view
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,7 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +26,13 @@ import com.example.musicplayercompose.ui.theme.lightBlue
 import com.example.musicplayercompose.ui.theme.sliderActiveColor
 
 @Composable
-fun mainView(){
+fun mainView(context  : Context){
+
+    val  mediaPlayer : MediaPlayer = MediaPlayer.create(context,R.raw.music)
+    val currentPosition = mediaPlayer.currentPosition
+
+    var playState by remember { mutableStateOf(false) }
+
     Scaffold() {
         Box(modifier = Modifier
             .fillMaxSize()
@@ -70,14 +79,21 @@ fun mainView(){
                         activeTrackColor = sliderActiveColor
                     ),
                     value = 0.5f,
-                    onValueChange = {}
+                    onValueChange = { newValue ->
+                        mediaPlayer.seekTo(newValue.toInt())
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
                 
                 Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
 
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(
+                        onClick = {
+                            // موزیک 1 ثانیه به عقب برمیگرده
+                       val newPosition = currentPosition - 10000
+                            mediaPlayer.seekTo(newPosition)
+                    }) {
                         Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = null)
                     }
                     Spacer(modifier = Modifier.width(68.dp))
@@ -90,13 +106,29 @@ fun mainView(){
                         shape = RoundedCornerShape(64),
                         backgroundColor = darkBlue
                     ) {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color.White)
+                        IconButton(
+                            onClick = {
+                                if(playState){
+                                   playState = false
+                                    mediaPlayer.stop()
+                                }else{
+                                    playState = true
+                                    mediaPlayer.start()
+                                }
+                            }) {
+                            Icon(
+                                if (playState) painterResource(id = R.drawable.ic_baseline_pause_24 ) else painterResource(id = R.drawable.ic_baseline_play_arrow_24 ) ,
+                                contentDescription = null, tint = Color.White)
                         }
                     }
 
                     Spacer(modifier = Modifier.width(68.dp))
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(
+                        onClick = {
+                            // موزیک 10 ثانیه به جلو میره
+                        val newPosition = currentPosition + 10000
+                        mediaPlayer.seekTo(newPosition)
+                    }) {
                         Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null)
                     }
 
