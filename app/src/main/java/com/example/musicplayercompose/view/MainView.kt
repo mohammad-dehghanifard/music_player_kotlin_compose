@@ -9,8 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,14 +22,33 @@ import com.example.musicplayercompose.R
 import com.example.musicplayercompose.ui.theme.darkBlue
 import com.example.musicplayercompose.ui.theme.lightBlue
 import com.example.musicplayercompose.ui.theme.sliderActiveColor
+import kotlinx.coroutines.*
 
 @Composable
-fun mainView(context  : Context){
+fun MusicPlayerScreen(context  : Context){
 
-    val  mediaPlayer : MediaPlayer = MediaPlayer.create(context,R.raw.music)
-    val currentPosition = mediaPlayer.currentPosition
-
+    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.music) }
+    var currentPosition by remember { mutableStateOf(0) }
     var playState by remember { mutableStateOf(false) }
+    var sliderValue by remember { mutableStateOf(0f) }
+    var totalDuration by remember { mutableStateOf(0) }
+
+    // پرشدن مقدار اسلایدر با زمان پخش شده
+    LaunchedEffect(Unit) {
+        val scope = CoroutineScope(Dispatchers.Default)
+        scope.launch {
+            while (true) {
+                withContext(Dispatchers.Main) {
+                    sliderValue = mediaPlayer.currentPosition.toFloat()
+                    totalDuration = mediaPlayer.duration
+                }
+                delay(100)
+            }
+        }
+    }
+
+
+
 
     Scaffold() {
         Box(modifier = Modifier
@@ -78,21 +95,26 @@ fun mainView(context  : Context){
                         thumbColor = darkBlue,
                         activeTrackColor = sliderActiveColor
                     ),
-                    value = 0.5f,
+                    value = sliderValue,
                     onValueChange = { newValue ->
+                        sliderValue = newValue
                         mediaPlayer.seekTo(newValue.toInt())
-                    }
+                    },
+                    valueRange = 0f..totalDuration.toFloat(),
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
-                
+
                 Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
 
                     IconButton(
                         onClick = {
-                            // موزیک 1 ثانیه به عقب برمیگرده
-                       val newPosition = currentPosition - 10000
-                            mediaPlayer.seekTo(newPosition)
+                            // موزیک 10 ثانیه به عقب میره
+                            val newPosition = currentPosition - 10000
+                            if (newPosition >= 0) {
+                                mediaPlayer.seekTo(newPosition)
+                                currentPosition = newPosition
+                            }
                     }) {
                         Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = null)
                     }
