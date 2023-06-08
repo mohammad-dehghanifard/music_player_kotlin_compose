@@ -98,7 +98,8 @@ fun MusicPlayerScreen(context  : Context){
                     value = sliderValue,
                     onValueChange = { newValue ->
                         sliderValue = newValue
-                        mediaPlayer.seekTo(newValue.toInt())
+                        val newPosition = newValue.toInt()
+                        mediaPlayer.seekTo(newPosition)
                     },
                     valueRange = 0f..totalDuration.toFloat(),
                 )
@@ -110,11 +111,7 @@ fun MusicPlayerScreen(context  : Context){
                     IconButton(
                         onClick = {
                             // موزیک 10 ثانیه به عقب میره
-                            val newPosition = currentPosition - 10000
-                            if (newPosition >= 0) {
-                                mediaPlayer.seekTo(newPosition)
-                                currentPosition = newPosition
-                            }
+                            mediaPlayer.seekTo(mediaPlayer.currentPosition - 1000)
                     }) {
                         Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = null)
                     }
@@ -148,8 +145,7 @@ fun MusicPlayerScreen(context  : Context){
                     IconButton(
                         onClick = {
                             // موزیک 10 ثانیه به جلو میره
-                        val newPosition = currentPosition + 10000
-                        mediaPlayer.seekTo(newPosition)
+                            mediaPlayer.seekTo(mediaPlayer.currentPosition + 1000)
                     }) {
                         Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null)
                     }
